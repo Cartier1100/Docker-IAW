@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  web:
+    image: php:8.2-apache
+    container_name: php_web
+    volumes:
+      - .:/var/www/html    # Monta la carpeta actual dentro del contenedor
+    ports:
+      - "8080:80"          # Exponiendo el puerto 80 del contenedor al 8080 del host
+    depends_on:
+      - db                 # Asegura que la base de datos esté lista antes de iniciar
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pwpersonal
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./pwpersonal.sql:/docker-entrypoint-initdb.d/pwpersonal.sql
+    ports:
+      - "3306:3306"        # Exponiendo el puerto 3306 para acceso a MySQL
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "8081:80"          # phpMyAdmin disponible en el puerto 8081
+    depends_on:
+      - db
+
+volumes:
+  db_data:
