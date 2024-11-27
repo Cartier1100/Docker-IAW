@@ -7,6 +7,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install gd mysqli pdo pdo_mysql zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Configurar directorio de la aplicación
-COPY . /var/www/html/
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
+# Configurar permisos para Moodle
+RUN mkdir -p /var/moodledata \
+    && chown -R www-data:www-data /var/moodledata \
+    && chmod -R 755 /var/moodledata
+
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
