@@ -7,14 +7,19 @@ services:
       dockerfile: Dockerfile
     container_name: moodle_web
     ports:
-      - "8088:80"
+      - "8088:80" # Exponiendo Moodle en el puerto 8088 del host
     environment:
+      # Configuración de conexión a la base de datos
       MOODLE_DB_HOST: db
       MOODLE_DB_USER: moodleuser
       MOODLE_DB_PASSWORD: moodlepassword
       MOODLE_DB_NAME: moodledb
     depends_on:
       - db
+    volumes:
+      - ./moodle-data:/var/www/html # Volumen para datos de Moodle
+    networks:
+      - moodle_network
 
   db:
     image: mysql:5.7
@@ -26,3 +31,9 @@ services:
       MYSQL_PASSWORD: moodlepassword
     volumes:
       - ./db-data:/var/lib/mysql
+    networks:
+      - moodle_network
+
+networks:
+  moodle_network:
+    driver: bridge
