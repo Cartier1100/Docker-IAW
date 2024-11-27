@@ -1,0 +1,7 @@
+db-data/
+moodle/
+*.sql
+*.tar
+*.zip
+*.log
+node_modules/
